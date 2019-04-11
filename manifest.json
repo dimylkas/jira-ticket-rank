@@ -1,9 +1,9 @@
 {
 	"name": "Jira Ticket Rank",
 	"version": "2.0",
-	"manifest_version": 3,
+	"manifest_version": 2,
 
-	"description": "The extension simply displays rank for each Jira ticket in the list. Useful when you want to prioritize stories based on linked requirements rank.",
+	"description": "The extension simply displays rank for each Jira ticket in the list. Useful when you want to prioritize stories based.",
 	"icons": {
 		"16": "icons/icon16.png",
 		"48": "icons/icon48.png",
