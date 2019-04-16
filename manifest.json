@@ -1,6 +1,6 @@
 {
 	"name": "Jira Ticket Rank",
-	"version": "2.0",
+	"version": "2.1",
 	"manifest_version": 2,
 
 	"description": "The extension simply displays rank for each Jira ticket in the list. Useful when you want to prioritize stories based.",
