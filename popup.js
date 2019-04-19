@@ -1,39 +1,69 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', init);
 
-  const btnSetEnumeration = document.getElementById('btn-set-enumerate');
-  const btnApplyEnumeration = document.getElementById('btn-apply-enumeration');
-  const cbxAdvancedSettings = document.getElementById('cbx-advanced-settings');
+const exControls = {
+  btnSetEnum: null,
+  btnApplyEnum: null,
+  btnSaveEnum: null,
+  btnIdentifyTicket: null,
+};
 
-  btnSetEnumeration.addEventListener('click', enumerateTickets);
+function init() {
+  exControls.btnSetEnum = document.getElementById('btn-set-enumerate');
+  exControls.btnApplyEnum = document.getElementById('btn-apply-enumeration');
+  exControls.btnSaveEnum = document.getElementById('btn-save');
+  exControls.btnIdentifyTicket = document.getElementById('btn-identify-ticket');
 
-  btnApplyEnumeration.addEventListener('click', applyTicketEnumeration);
+  initEventHandlers();
+}
 
-  cbxAdvancedSettings.addEventListener('change', (event) => {
-    const settingsDiv = document.getElementsByClassName('advanced-settings');
-    if (event.target.checked) {
-      settingsDiv[0].classList.remove('hide');
-    } else {
-      settingsDiv[0].classList.add('hide');
-    }
+function initEventHandlers() {
+  exControls.btnSetEnum.addEventListener('click', enumerateTickets);
+  exControls.btnApplyEnum.addEventListener('click', applyTicketEnumeration);
+  exControls.btnSaveEnum.addEventListener('click', saveEnum);
+  exControls.btnIdentifyTicket.addEventListener('click', identifyTicket);
+}
+
+function identifyTicket() {
+  chrome.storage.local.get(['list'], (result) => {
+    chrome.tabs.executeScript(
+      null,
+      {
+        code: 'var tmpList = '+ JSON.stringify(result.list) + '; [].forEach.call(document.getElementsByClassName("links-container")[0].getElementsByClassName("issue-link"), (el, i) => { el.insertAdjacentHTML(\'beforebegin\', `<span class=\"jira-ticket-enumeration\">№: ${tmpList.indexOf(el.innerText) + 1} - </span>`)});'
+      },
+      () => { window.close(); }
+    );
   });
-});
+}
+
+function saveEnum() {
+  chrome.tabs.executeScript(
+    null,
+    { code: "(() => [].map.call(document.getElementsByClassName('js-key-link'), (el, i) => el.innerText))();" },
+    (result) => {
+      chrome.storage.local.set({ list: result[0] });
+      window.close();
+    },
+  );
+}
 
 function enumerateTickets() {
   chrome.tabs.executeScript(
     null,
     {
-      code: "var list = [].map.call(document.getElementsByClassName('js-key-link'), (el, i) => el.innerText); [].forEach.call(document.getElementsByClassName('js-key-link'), (el, i) => { el.innerText = `№: ${i+1} - ${el.innerText}` });"
-    }
+      code: "[].forEach.call(document.getElementsByClassName('js-key-link'), (el, i) => { el.insertAdjacentHTML('beforebegin', `<span class=\"jira-ticket-enumeration\">№: ${i+1} - </span>`)});"
+    },
+    () => { window.close(); }
   );
-  window.close();
 }
 
 function applyTicketEnumeration() {
-  chrome.tabs.executeScript(
-    null,
-    {
-      code: "[].forEach.call(document.getElementsByClassName('js-key-link'), (el, i) => { el.innerText = `№: ${list.indexOf(el.innerText) + 1} - ${el.innerText}` });"
-    }
-  );
-  window.close();
+  chrome.storage.local.get(['list'], (result) => {
+    chrome.tabs.executeScript(
+      null,
+      {
+        code: 'var tmpList = '+ JSON.stringify(result.list) + '; [].forEach.call(document.getElementsByClassName("js-key-link"), (el, i) => { el.insertAdjacentHTML(\'beforebegin\', `<span class=\"jira-ticket-enumeration\">№: ${tmpList.indexOf(el.innerText) + 1} - </span>`)});'
+      },
+      () => { window.close(); }
+    );
+  });
 }

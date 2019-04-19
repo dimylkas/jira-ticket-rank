@@ -1,36 +1,78 @@
 body {
-    width: 150px;
+    width: 295px;
     margin: 15px;
     font-size: 15px;
     font-style: normal;
     background-color: white;
 }
 
-.btn {
-    display: inline-block;
-    margin-bottom: 0;
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: middle;
-    cursor: pointer;
-    border: 1px solid #2462a4;
-    padding: 5px 10px;
-    font-size: 12px;
-    color: #fff;
-    line-height: 1.5;
-    background-color: #3178b7;
-    border-radius: 3px;
+.txt-right {
+    text-align: right;
 }
+
+.btn {
+    cursor: pointer;
+    display: inline-block;
+    -webkit-appearance: none!important;
+    border-radius: .125rem;
+    border: 1px solid #0079b8;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    vertical-align: middle;
+    line-height: 1.5rem;
+    letter-spacing: .12em;
+    font-size: .7rem;
+    font-weight: 500;
+    height: 2rem;
+    padding: 0 .5rem;
+    background-color: transparent;
+    color: #0079b8;
+    margin: .25rem .5rem .25rem 0;
+}
+
+/*min-width: 3rem;*/
+/*max-width: 15rem;*/
+
+.btn-primary {
+    border-color: #0079b8;
+    background-color: #0079b8;
+    color: #fff;
+}
+
+.btn-primary .btn:hover, .btn.btn-primary:hover {
+    background-color: #004a70;
+    color: #e1f1f6;
+}
+
+.btn-regular {
+    border-color: #0079b8;
+    background-color: transparent;
+    color: #0079b8;
+}
+
+.btn-regular .btn:hover, .btn-regular .btn:hover, .btn.btn-regular:hover {
+    background-color: #e1f1f6;
+    color: #004a70;
+}
+
+.btn-success {
+    border-color: #308300;
+    background-color: transparent;
+    color: #308300;
+}
+
+.btn-success .btn:hover,
+.btn.btn-success:hover {
+    background-color: #dff0d0;
+    color: #1d5100;
+}
+
 
 .block {
     display: block;
     width: 100%;
-}
-
-.advanced-settings {
-
-}
-
-.advanced-settings.hide {
-    display: none;
 }
