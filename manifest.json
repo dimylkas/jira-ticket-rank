@@ -16,6 +16,6 @@
 	"author": "Dmytro Bogdanov",
 	"homepage_url": "https://github.com/dimylkas/jira-ticket-rank",
 	"permissions": [
-		"http://*/*","https://*/*", "storage"
+		"http://*/*","https://*/*", "storage", "activeTab"
 	]
 }
