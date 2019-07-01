@@ -71,6 +71,18 @@ body {
     color: #1d5100;
 }
 
+.btn-danger {
+    border-color: #c92100;
+    background-color: transparent;
+    color: #e12200;
+}
+
+.btn-danger .btn:hover,
+.btn.btn-danger:hover {
+    background-color: #f5dbd9;
+    color: #a32100;
+}
+
 
 .block {
     display: block;
