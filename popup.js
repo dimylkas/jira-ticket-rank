@@ -50,7 +50,6 @@ function enumerateTickets() {
           code,
         },
         (result) => {
-          console.log(result);
           chrome.storage.local.set({ list: result[0] });
         }
     );
