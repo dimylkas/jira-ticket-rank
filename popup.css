@@ -1,5 +1,5 @@
 body {
-    width: 295px;
+    width: 350px;
     margin: 15px;
     font-size: 15px;
     font-style: normal;
@@ -33,9 +33,6 @@ body {
     color: #0079b8;
     margin: .25rem .5rem .25rem 0;
 }
-
-/*min-width: 3rem;*/
-/*max-width: 15rem;*/
 
 .btn-primary {
     border-color: #0079b8;
@@ -83,6 +80,24 @@ body {
     color: #a32100;
 }
 
+.btn-success-continue {
+    border-color: #2f8400;
+    background-color: #2f8400;
+    color: #fff;
+}
+
+.btn-success-continue .btn:hover,
+.btn.btn-success-continue:hover {
+    background-color: #266900;
+}
+
+.block-75 {
+    width: 65%;
+}
+
+.block-25 {
+    width: 29%;
+}
 
 .block {
     display: block;
