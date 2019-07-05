@@ -27,13 +27,11 @@ function initEventHandlers() {
 }
 
 function isJiraStructure(callback) {
-    const code = "!!document.getElementsByClassName('s-f-issuekey').length;";
+    const code = "!!document.getElementsByClassName('st-view').length;";
   chrome.tabs.executeScript(
       null,
       { code },
-      (isStructure) => {
-        return callback(isStructure[0]);
-      }
+      (isStructure) => callback(isStructure[0]),
   );
 }
 
@@ -49,15 +47,14 @@ function enumerateTickets() {
             'var topCSS = document.querySelector(".cacheTable").style.top;' +
             'if (!topCSS || topCSS !== "0px") { alert("Be careful! Page scrolled down and listing for enumeration might not be correct. Better is scroll to top of the list and enumerate + use \'Continue\' bnt") }';
 
-        chrome.tabs.executeScript(null,
-            {
-                code: alertCode,
-            }
+        chrome.tabs.executeScript(
+            null,
+            { code: alertCode }
         );
       // @description: For jira structure list
       code = "" +
-          "[].forEach.call(document.getElementsByClassName('s-f-issuekey'), (el, i) => { el.getElementsByClassName('s-item-link')[0].insertAdjacentHTML('beforebegin', `<span class=\"jira-ticket-enumeration\" data-number=${i+1}>№: ${i+1} - </span>`)});" +
-          "(() => [].map.call(document.getElementsByClassName('s-f-issuekey'), (el, i) => el.getElementsByClassName('s-item-link')[0].innerText))();"
+          "[].forEach.call(document.querySelectorAll('.s-sema-inserted .s-f-issuekey'), (el, i) => { el.getElementsByClassName('s-item-link')[0].insertAdjacentHTML('beforebegin', `<span class=\"jira-ticket-enumeration\" data-number=${i+1}>№: ${i+1} - </span>`)});" +
+          "(() => [].map.call(document.querySelectorAll('.s-sema-inserted .s-f-issuekey'), (el, i) => el.getElementsByClassName('s-item-link')[0].innerText))();"
     }
 
     chrome.tabs.executeScript(
@@ -83,7 +80,7 @@ function continueEnumeration() {
             "var enumList = document.querySelectorAll('.jira-ticket-enumeration');" +
             "if (enumList && enumList.length) {" +
                 "var lastNum = +enumList[enumList.length - 1].getAttribute('data-number');" +
-                "var filteredItems = [].filter.call(document.getElementsByClassName('s-f-issuekey'), (el) => !el.getElementsByClassName('s-item-link')[0].parentElement.innerHTML.includes('jira-ticket-enumeration'));" +
+                "var filteredItems = [].filter.call(document.querySelectorAll('.s-sema-inserted .s-f-issuekey'), (el) => !el.getElementsByClassName('s-item-link')[0].parentElement.innerHTML.includes('jira-ticket-enumeration'));" +
                 "[].forEach.call(filteredItems, (el, i) => { el.getElementsByClassName('s-item-link')[0].insertAdjacentHTML('beforebegin', `<span class='jira-ticket-enumeration' data-number=${ i + lastNum + 1}>№: ${ i + lastNum + 1} - </span>`)});" +
                 "(() => [].map.call(filteredItems, (el, i) => el.getElementsByClassName('s-item-link')[0].innerText))();" +
             "}";
@@ -116,7 +113,7 @@ function applyTicketEnumeration() {
         // @description: For jira structure list
         code = '' +
             'var tmpList = '+ JSON.stringify(result.list) + ';' +
-            '[].forEach.call(document.getElementsByClassName("s-f-issuekey"), (el, i) => { el.getElementsByClassName(\'s-item-link\')[0].insertAdjacentHTML(\'beforebegin\', `<span class=\"jira-ticket-enumeration\">№: ${tmpList.indexOf(el.getElementsByClassName(\'s-item-link\')[0].innerText) + 1} - </span>`)});';
+            '[].forEach.call(document.querySelectorAll(".s-sema-inserted .s-f-issuekey"), (el, i) => { el.getElementsByClassName(\'s-item-link\')[0].insertAdjacentHTML(\'beforebegin\', `<span class=\"jira-ticket-enumeration\">№: ${tmpList.indexOf(el.getElementsByClassName(\'s-item-link\')[0].innerText) + 1} - </span>`)});';
       }
 
       chrome.tabs.executeScript(
