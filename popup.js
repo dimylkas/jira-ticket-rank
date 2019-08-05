@@ -27,7 +27,7 @@ function initEventHandlers() {
 }
 
 function isJiraStructure(callback) {
-    const code = "!!document.getElementsByClassName('st-view').length;";
+    const code = "!!document.getElementsByClassName('st-view').length && !document.getElementsByClassName('ghx-backlog-group').length";
   chrome.tabs.executeScript(
       null,
       { code },
@@ -62,10 +62,9 @@ function enumerateTickets() {
         { code },
         (result) => {
           chrome.storage.local.set({ list: result[0] });
+          window.close();
         }
     );
-
-    window.close();
   });
 }
 
