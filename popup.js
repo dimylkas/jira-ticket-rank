@@ -39,8 +39,8 @@ function enumerateTickets() {
   isJiraStructure((structure) => {
     // @description: For simple jira list
     let code = "" +
-        "[].forEach.call(document.getElementsByClassName('js-key-link'), (el, i) => { el.insertAdjacentHTML('beforebegin', `<span class=\"jira-ticket-enumeration\" data-number=${i+1}>№: ${i+1} - </span>`)});" +
-        "(() => [].map.call(document.getElementsByClassName('js-key-link'), (el, i) => el.innerText))();";
+        "[].forEach.call(document.getElementsByClassName('js-key-link'), (el, i) => { el.insertAdjacentHTML('beforebegin', `<span class=\"jira-ticket-enumeration\" data-number=${i+1}>№: ${i+1} - </span>`)});";
+    let getListEnumeration = "(() => [].map.call(document.getElementsByClassName('js-key-link'), (el, i) => el.innerText))();";
 
     if (structure) {
         const alertCode = '' +
@@ -53,16 +53,29 @@ function enumerateTickets() {
         );
       // @description: For jira structure list
       code = "" +
-          "[].forEach.call(document.querySelectorAll('.s-sema-inserted .s-f-issuekey'), (el, i) => { el.getElementsByClassName('s-item-link')[0].insertAdjacentHTML('beforebegin', `<span class=\"jira-ticket-enumeration\" data-number=${i+1}>№: ${i+1} - </span>`)});" +
-          "(() => [].map.call(document.querySelectorAll('.s-sema-inserted .s-f-issuekey'), (el, i) => el.getElementsByClassName('s-item-link')[0].innerText))();"
+          "[].forEach.call(document.querySelectorAll('.s-sema-inserted .s-f-issuekey'), (el, i) => { el.getElementsByClassName('s-item-link')[0].insertAdjacentHTML('beforebegin', `<span class=\"jira-ticket-enumeration\" data-number=${i+1}>№: ${i+1} - </span>`)});";
+
+      getListEnumeration = "(() => [].map.call(document.querySelectorAll('.s-sema-inserted .s-f-issuekey'), (el, i) => el.getElementsByClassName('s-item-link')[0].innerText))();"
+    } else {
+        const loadAllIssues = ' ' +
+            'if (document.getElementsByClassName("js-show-all-link").length) { document.getElementsByClassName("js-show-all-link")[0].click(); }' +
+            'var waitForIssues = setInterval(() => { if (!document.getElementById("jira").classList.contains("ghx-loading-backlog")) { clearInterval(waitForIssues); return ' + code +' } }, 500)';
+
+        code = loadAllIssues;
     }
 
     chrome.tabs.executeScript(
         null,
         { code },
-        (result) => {
-          chrome.storage.local.set({ list: result[0] });
-          window.close();
+        () => {
+            chrome.tabs.executeScript(
+                null,
+                { code: getListEnumeration },
+                (result) => {
+                    chrome.storage.local.set({ list: result[0] });
+                    window.close();
+                }
+            );
         }
     );
   });
